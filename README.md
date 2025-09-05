@@ -28,17 +28,26 @@ chmod +x bin/run_demux_tipchip.sh
 The wrapper script is located at `bin/run_demux_tipchip.sh`, run it with:
 
 ```bash
-bash run_demux_tipchip.sh -i R1.fastq.gz R2.fastq.gz -m metadata.tsv [options]
+bash run_demux_tipchip.sh -i R1.fastq.gz R2.fastq.gz -m inlinebarcode_metadata.tsv [options]
 ```
 
 ### Required arguments
 - `-i R1.fastq.gz R2.fastq.gz` → paired-end FASTQ files  
-- `-m metadata.tsv` → inline barcode metadata file  
+- `-m inlinebarcode_metadata.tsv` → inline barcode metadata file  
 
 ### Optional arguments
 - `-o OUTPUT_DIR` → output directory (default: `FASTQ_Output`)  
 - `-x MAX_MISMATCHES` → maximum mismatches (default: `1`)  
 - `-d MIN_MISMATCH_DELTA` → minimum mismatch delta (default: `1`)  
+
+### Creating the `inlinebarcode_metadata.tsv`
+
+The `inlinebarcode_metadata.tsv` file defines the mapping between **sample IDs** and their **inline barcodes**. This file is required for the demultiplexing step. The file is a **tab-delimited text file** with the following columns:
+
+- `sample_id` → a user-defined name for each sample (can be changed to anything meaningful, e.g. `sample01`, `patientA`, `condition1_rep1`)  
+- `barcode` → the concatenated sequence of **Read 1 barcode** + **Read 2 barcode** from the TIP-ChIP plate map (`data/TIP-ChIP Plate Map with Barcodes.xlsx`)
+- an example `inlinebarcode_metadata.tsv` file can be found at: `data/inlinebarcode_metadata.tsv`
+
 
 ---
 
@@ -58,11 +67,3 @@ This will demultiplex reads using inline barcodes and write outputs to `demux_re
 ## 📂 Output
 
 Demultiplexed FASTQs are written to the specified output directory. Each sample defined in the metadata file will have its own FASTQ files.
-
----
-
-## 🔧 Notes
-
-- The default read structure in the script is `6B19S+T 6B19S+T`, consistent with TIP-ChIP libraries.  
-- Adjust parameters if your experimental design differs.  
-- For advanced usage and full parameter descriptions, refer to the official [fqtk documentation](https://github.com/fulcrumgenomics/fqtk).
